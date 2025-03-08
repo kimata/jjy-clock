@@ -1,0 +1,6 @@
+control:
+    gpio: 4
+
+liveness:
+    file:
+        sensing: /dev/shm/healthz
