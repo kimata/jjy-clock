@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-標準電波 JJY に相当する信号を送信するライブラリです．
+標準電波 JJY に相当する信号を送信するライブラリです。
 
 Usage:
   app.py [-c CONFIG] [-D]
 
 Options:
-  -c CONFIG         : CONFIG を設定ファイルとして読み込んで実行します．[default: config.yaml]
-  -D                : デバッグモードで動作します．
+  -c CONFIG         : CONFIG を設定ファイルとして読み込んで実行します。[default: config.yaml]
+  -D                : デバッグモードで動作します。
 """
 
 import logging

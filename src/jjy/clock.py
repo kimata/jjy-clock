@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-標準電波 JJY に相当する信号を生成するライブラリです．
+標準電波 JJY に相当する信号を生成するライブラリです。
 
 Usage:
   clock.py [-D]
 
 Options:
-  -D                : デバッグモードで動作します．
+  -D                : デバッグモードで動作します。
 """
 
 import datetime

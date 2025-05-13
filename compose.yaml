@@ -1,0 +1,11 @@
+services:
+    jjy-wave:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        tty: true
+        stdin_open: true
+
+        privileged: true
+        devices:
+            - "/dev/gpiomem:/dev/gpiomem"
