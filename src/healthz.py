@@ -45,7 +45,7 @@ if __name__ == "__main__":
         {
             "name": name,
             "liveness_file": pathlib.Path(config["liveness"]["file"][name]),
-            "interval": config[name]["interval_sec"],
+            "interval": 60,
         }
         for name in ["jjy-wave"]
     ]
