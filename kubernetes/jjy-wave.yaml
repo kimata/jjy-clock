@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: hems-jjy-wave
+    namespace: hems
+    labels:
+        app: hems-jjy-wave
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: hems-jjy-wave
+    template:
+        metadata:
+            labels:
+                app: hems-jjy-wave
+        spec:
+            volumes:
+                - name: dev
+                  hostPath:
+                    path: /dev
+            containers:                    
+                - name: hems-jjy-wave
+                  image: registry.green-rabbit.net:5000/kimata/jjy-wave:latest
+                  imagePullPolicy: Always
+                  command: [./src/app.py, -c, jjy-wave.yaml]
+                  volumeMounts:
+                    - name: dev-gpio
+                      mountPath: /dev/gpiomem
+                      
+                  livenessProbe:
+                    exec:
+                        command: [./src/healthz.py, -c, jjy-wave.yaml]
+                    initialDelaySeconds: 120
+                    periodSeconds: 120
+                    timeoutSeconds: 30
+                    successThreshold: 1
+                    failureThreshold: 3
+                  securityContext:
+                    privileged: true
+
+            volumes:
+                - name: dev-gpio
+                  hostPath:
+                    path: /dev/gpiomem
+
+            dnsPolicy: Default
+            nodeSelector:
+                kubernetes.io/hostname: rasp-power

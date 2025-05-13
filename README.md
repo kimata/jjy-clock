@@ -33,6 +33,11 @@ docker compose run --build --rm jjy-wave
 [Rye](https://rye.astral.sh/) がインストールされた環境であれば，
 下記のようにして Docker を使わずに実行できます．
 
+## Kubernetes で動かす場合
+
+Kubernetes で実行するため設定ファイルが `kubernetes/jjy-wave.yaml` に入っていますので，
+適宜カスタマイズして使っていただければと思います。
+
 ```bash:bash
 rye sync
 rye run python src/app.py
