@@ -12,7 +12,7 @@ requires-python = ">= 3.10"
 dependencies = [
     "docopt-ng>=0.9.0",
     "rpi-lgpio>=0.6",
-    "my-lib @ git+https://github.com/kimata/my-py-lib@41443b7bb12ab5bdecd71b6e3f3607d1a9279863",
+    "my-lib @ git+https://github.com/kimata/my-py-lib@826f966963173978cf49fa1382f1a4a43d342e5b",
 ]
 
 [build-system]
