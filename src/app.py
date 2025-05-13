@@ -15,10 +15,9 @@ import logging
 import pathlib
 import signal
 
+import jjy.clock
 import my_lib.footprint
 import my_lib.rpi
-
-import jjy.clock
 
 SCHEMA_CONFIG = "config.schema"
 

@@ -15,10 +15,6 @@ spec:
             labels:
                 app: hems-jjy-wave
         spec:
-            volumes:
-                - name: dev
-                  hostPath:
-                    path: /dev
             containers:
                 - name: hems-jjy-wave
                   image: registry.green-rabbit.net:5000/kimata/jjy-wave:latest

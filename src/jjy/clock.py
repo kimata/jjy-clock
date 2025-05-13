@@ -39,11 +39,11 @@ def send_bit(send_pulse_func, bit):
         time.sleep(0.5)
 
 
-def send_bcd(num, count, parity=0):
+def send_bcd(send_pulse_func, num, count, parity=0):
     logging.debug("send bcd: %d (%d)", num, count)
     for i in range(count):
         bit = (int(num) >> ((count - 1) - i)) & 0x1
-        send_bit(bit)
+        send_bit(send_pulse_func, bit)
         parity ^= bit
     return parity
 
@@ -59,81 +59,81 @@ def send_datetime(now, send_pulse_func):
     hour_parity = 0
 
     ############################################################
-    send_bit(-1)
+    send_bit(send_pulse_func, -1)
 
     # 10分位のBCD
-    min_parity = send_bcd(minute / 10, 3, min_parity)
+    min_parity = send_bcd(send_pulse_func, minute / 10, 3, min_parity)
 
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
 
     # 1分位のBCD
-    min_parity = send_bcd(minute % 10, 4, min_parity)
+    min_parity = send_bcd(send_pulse_func, minute % 10, 4, min_parity)
 
-    send_bit(-1)
+    send_bit(send_pulse_func, -1)
 
     ############################################################
-    send_bit(0)
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
 
     # 10時位のBCD
-    hour_parity = send_bcd(hour / 10, 2, hour_parity)
+    hour_parity = send_bcd(send_pulse_func, hour / 10, 2, hour_parity)
 
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
 
     # 1時位のBCD
-    hour_parity = send_bcd(hour % 10, 4, hour_parity)
+    hour_parity = send_bcd(send_pulse_func, hour % 10, 4, hour_parity)
 
-    send_bit(-1)
+    send_bit(send_pulse_func, -1)
 
     ############################################################
-    send_bit(0)
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
 
     # 累計日数100日位のBCD
-    send_bcd(day / 100, 2)
+    send_bcd(send_pulse_func, day / 100, 2)
 
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
 
     # 累計日数10日位のBCD
-    send_bcd((day % 100) / 10, 4)
+    send_bcd(send_pulse_func, (day % 100) / 10, 4)
 
-    send_bit(-1)
+    send_bit(send_pulse_func, -1)
 
     ############################################################
     # 累計日数1日位のBCD
-    send_bcd(day % 10, 4)
+    send_bcd(send_pulse_func, day % 10, 4)
 
-    send_bit(0)
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
 
     # パリティ
-    send_bit(hour_parity)
-    send_bit(min_parity)
+    send_bit(send_pulse_func, hour_parity)
+    send_bit(send_pulse_func, min_parity)
 
-    send_bit(0)
-    send_bit(-1)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, -1)
 
     ############################################################
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
 
     # 西暦年10年位のBCD
-    send_bcd((year % 100) / 10, 4)
+    send_bcd(send_pulse_func, (year % 100) / 10, 4)
 
     # 西暦年1年位のBCD
-    send_bcd(year % 10, 4)
+    send_bcd(send_pulse_func, year % 10, 4)
 
-    send_bit(-1)
+    send_bit(send_pulse_func, -1)
 
     ############################################################
     # 曜日のBCD
-    send_bcd(wday, 3)
+    send_bcd(send_pulse_func, wday, 3)
 
-    send_bit(0)
-    send_bit(0)
-    send_bit(0)
-    send_bit(0)
-    send_bit(0)
-    send_bit(0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
+    send_bit(send_pulse_func, 0)
 
     # マーカ
     send_pulse_func(pulse_mode.ON.value)
