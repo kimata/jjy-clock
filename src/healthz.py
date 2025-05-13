@@ -36,7 +36,7 @@ if __name__ == "__main__":
     config_file = args["-c"]
     debug_mode = args["-D"]
 
-    my_lib.logger.init("hems.rasp-aqua", level=logging.DEBUG if debug_mode else logging.INFO)
+    my_lib.logger.init("hems.jjy-wave", level=logging.DEBUG if debug_mode else logging.INFO)
 
     logging.info("Using config config: %s", config_file)
     config = my_lib.config.load(config_file)
@@ -47,7 +47,7 @@ if __name__ == "__main__":
             "liveness_file": pathlib.Path(config["liveness"]["file"][name]),
             "interval": config[name]["interval_sec"],
         }
-        for name in ["sensing"]
+        for name in ["jjy-wave"]
     ]
 
     if check_liveness(target_list):

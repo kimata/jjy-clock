@@ -3,4 +3,4 @@ control:
 
 liveness:
     file:
-        sensing: /dev/shm/healthz
+        jjy-wave: /dev/shm/healthz

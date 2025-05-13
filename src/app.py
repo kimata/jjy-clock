@@ -3,10 +3,11 @@
 標準電波 JJY に相当する信号を送信するライブラリです。
 
 Usage:
-  app.py [-c CONFIG] [-D]
+  app.py [-c CONFIG] [-D] [-O]
 
 Options:
   -c CONFIG         : CONFIG を設定ファイルとして読み込んで実行します。[default: config.yaml]
+  -O                : 1回のみ表示
   -D                : デバッグモードで動作します。
 """
 
@@ -33,7 +34,7 @@ def sig_handler(num, _):
         should_terminate = True
 
 
-def execute(config):
+def execute(config, is_one_time=False):
     global should_terminate
 
     pin_no = config["control"]["gpio"]
@@ -53,9 +54,12 @@ def execute(config):
     signal.signal(signal.SIGTERM, sig_handler)
 
     while True:
-        jjy.clock.start()
+        jjy.clock.start(send_pulse_func)
 
-        my_lib.footprint.update(pathlib.Path(config["liveness"]["file"]["sensing"]))
+        my_lib.footprint.update(pathlib.Path(config["liveness"]["file"]["jjy-wave"]))
+
+        if is_one_time:
+            break
 
         if should_terminate:
             logging.warning("SIGTERM received")
@@ -71,10 +75,11 @@ if __name__ == "__main__":
     args = docopt.docopt(__doc__)
 
     config_file = args["-c"]
+    is_one_time = args["-O"]
     debug_mode = args["-D"]
 
-    my_lib.logger.init("jjy", level=logging.DEBUG if debug_mode else logging.INFO)
+    my_lib.logger.init("hems.jjy-wave", level=logging.DEBUG if debug_mode else logging.INFO)
 
     config = my_lib.config.load(config_file, pathlib.Path(SCHEMA_CONFIG))
 
-    execute(config)
+    execute(config, is_one_time)

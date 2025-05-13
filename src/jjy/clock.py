@@ -14,28 +14,28 @@ import enum
 import logging
 import time
 
-send_pulse = None
+import my_lib.time
 
 pulse_mode = enum.Enum("pulse_mode", {"ON": 1, "OFF": 0})
 
 
-def send_bit(bit):
+def send_bit(send_pulse_func, bit):
     logging.debug("send bit: %d", bit)
 
     if bit == -1:  # マーカ
-        send_pulse(pulse_mode.ON.value)
+        send_pulse_func(pulse_mode.ON.value)
         time.sleep(0.2)
-        send_pulse(pulse_mode.OFF.value)
+        send_pulse_func(pulse_mode.OFF.value)
         time.sleep(0.799)
     elif bit == 0:  # 0
-        send_pulse(pulse_mode.ON.value)
+        send_pulse_func(pulse_mode.ON.value)
         time.sleep(0.799)
-        send_pulse(pulse_mode.OFF.value)
+        send_pulse_func(pulse_mode.OFF.value)
         time.sleep(0.2)
     elif bit == 1:  # 1
-        send_pulse(pulse_mode.ON.value)
+        send_pulse_func(pulse_mode.ON.value)
         time.sleep(0.499)
-        send_pulse(pulse_mode.OFF.value)
+        send_pulse_func(pulse_mode.OFF.value)
         time.sleep(0.5)
 
 
@@ -48,15 +48,12 @@ def send_bcd(num, count, parity=0):
     return parity
 
 
-def send_datetime(now):
-    now = datetime.datetime.now()
+def send_datetime(now, send_pulse_func):
     minute = now.minute
     hour = now.hour
     day = now.toordinal() - datetime.date(now.year, 1, 1).toordinal() + 1
     year = now.year % 100
     wday = now.isoweekday() % 7
-    sec = now.second
-    usec = now.microsecond
 
     min_parity = 0
     hour_parity = 0
@@ -139,16 +136,16 @@ def send_datetime(now):
     send_bit(0)
 
     # マーカ
-    send_pulse(pulse_mode.ON.value)
+    send_pulse_func(pulse_mode.ON.value)
     time.sleep(0.2)
-    send_pulse(pulse_mode.OFF.value)
+    send_pulse_func(pulse_mode.OFF.value)
     # 0.8 秒残しておき，次回呼び出しタイミングの調整代とする
 
 
-def start():
+def start(send_pulse_func):
     logging.info("start to send JJY code.")
 
-    now = datetime.datetime.now()
+    now = my_lib.time.now()
     sec = now.second
     usec = now.microsecond
 
@@ -160,16 +157,13 @@ def start():
 
     target_time = now.replace(second=0, microsecond=0) + datetime.timedelta(minutes=1)
 
-    send_datetime(target_time)
+    send_datetime(target_time, send_pulse_func)
 
     logging.info("send %s (calibration time: %1.2f sec).", target_time, wait_sec)
 
 
 def init(send_pulse_func):
-    global send_pulse
-
-    send_pulse = send_pulse_func
-    send_pulse(pulse_mode.OFF.value)
+    send_pulse_func(pulse_mode.OFF.value)
 
 
 ######################################################################
@@ -190,4 +184,4 @@ if __name__ == "__main__":
         logging.debug(mode)
 
     init(send_pulse_func)
-    start()
+    start(send_pulse_func)

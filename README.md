@@ -46,4 +46,3 @@ rye run python src/app.py
 # ライセンス
 
 Apache License Version 2.0 を適用します。
-
