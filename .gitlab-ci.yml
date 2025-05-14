@@ -59,28 +59,6 @@ test-walk-through:
         paths:
             - tests/evidence/**
 
-deploy-webapp-demo:
-    stage: deploy
-
-    needs:
-        - test-walk-through
-
-    image:
-        name: bitnami/kubectl:latest
-        entrypoint: [""]
-    script:
-        - kubectl config get-contexts
-        - kubectl config use-context kimata/rasp-shutter:pod-rollout
-        - kubectl --insecure-skip-tls-verify=true rollout restart -n hems deployment rasp-shutter-demo
-    rules:
-        # NOTE: 自動実行ではデプロイしない
-        - if: $CI_PIPELINE_SOURCE == "schedule"
-          when: never
-        - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
-          when: never
-        - when: on_success
-
-            
 deploy:
     stage: deploy
 
@@ -93,7 +71,7 @@ deploy:
     script:
         - kubectl config get-contexts
         - kubectl config use-context kimata/jjy-wave:pod-rollout
-        - kubectl --insecure-skip-tls-verify=true rollout restart -n hems daemonset jjy-wave
+        - kubectl --insecure-skip-tls-verify=true rollout restart -n hems deployment jjy-wave
     rules:
         # NOTE: 自動実行ではデプロイしない
         - if: $CI_PIPELINE_SOURCE == "schedule"
